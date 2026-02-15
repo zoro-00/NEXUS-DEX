@@ -39,8 +39,11 @@ export function SwapCard() {
   const [isSwapping, setIsSwapping] = useState(false);
 
   // Initialize tokens when chain changes
-  if (chainId && !inputToken) {
+  const [prevChainId, setPrevChainId] = useState<number | null>(null);
+
+  if (chainId && (chainId !== prevChainId || !inputToken)) {
     initializeTokens(chainId);
+    setPrevChainId(chainId);
   }
 
   // Get token balances

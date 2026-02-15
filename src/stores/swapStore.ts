@@ -26,7 +26,7 @@ interface SwapState {
   setInputAmount: (amount: string) => void;
   setOutputAmount: (amount: string) => void;
   switchTokens: () => void;
-  setTrade: (trade: Trade | null) => void;
+  setTrade: (trade: Trade | null, inputAmount?: string, outputAmount?: string) => void;
   setIsCalculating: (isCalculating: boolean) => void;
   updateSettings: (settings: Partial<SwapSettings>) => void;
   setShowSettings: (show: boolean) => void;
@@ -108,7 +108,14 @@ export const useSwapStore = create<SwapState>((set, get) => ({
   },
 
   // Set trade
-  setTrade: (trade) => set({ trade }),
+  setTrade: (trade, inputAmount, outputAmount) => {
+    set((state) => ({
+      trade,
+      inputAmount: inputAmount !== undefined ? inputAmount : state.inputAmount,
+      outputAmount: outputAmount !== undefined ? outputAmount : state.outputAmount,
+      isCalculating: false,
+    }));
+  },
 
   // Set calculating state
   setIsCalculating: (isCalculating) => set({ isCalculating }),
@@ -170,9 +177,7 @@ async function calculateTrade() {
     liquidityProviderFee: (inputValue * 0.003).toFixed(6),
   };
 
-  store.setTrade(trade);
-  store.setOutputAmount(trade.outputAmount);
-  store.setIsCalculating(false);
+  store.setTrade(trade, undefined, trade.outputAmount);
 }
 
 // Mock reverse trade calculation
@@ -206,9 +211,7 @@ async function calculateReverseTrade() {
     liquidityProviderFee: (inputValue * 0.003).toFixed(6),
   };
 
-  store.setTrade(trade);
-  store.setInputAmount(trade.inputAmount);
-  store.setIsCalculating(false);
+  store.setTrade(trade, trade.inputAmount, undefined);
 }
 
 // Mock price feed
@@ -229,7 +232,7 @@ function getMockPrice(tokenIn: string, tokenOut: string): number {
   const priceIn = prices[tokenIn] || 1;
   const priceOut = prices[tokenOut] || 1;
   
-  return priceOut / priceIn;
+  return priceIn / priceOut;
 }
 
 // Initialize tokens for a chain

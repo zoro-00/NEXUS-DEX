@@ -104,7 +104,7 @@ function getMockBasePrice(tokenIn: string, tokenOut: string): number {
   const priceIn = prices[tokenIn] || 1;
   const priceOut = prices[tokenOut] || 1;
 
-  return priceOut / priceIn;
+  return priceIn / priceOut;
 }
 
 function getTimeframePoints(timeframe: string): number {

@@ -92,6 +92,9 @@ export const useWalletStore = create<WalletStore>()(
     {
       name: 'nexus-wallet-storage',
       partialize: (state) => ({
+        address: state.address,
+        chainId: state.chainId,
+        isConnected: state.isConnected,
         transactions: state.transactions.filter(
           (tx) => Date.now() - tx.timestamp < 7 * 24 * 60 * 60 * 1000 // Keep only last 7 days
         ),

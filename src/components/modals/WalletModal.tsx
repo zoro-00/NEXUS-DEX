@@ -40,6 +40,9 @@ export function WalletModal({ isOpen, onClose }: WalletModalProps) {
       await connectMetaMask();
     } else if (walletId === 'walletconnect') {
       await connectWalletConnect();
+    } else if (walletId === 'coinbase') {
+      // Mock Coinbase connection for now, reusing WalletConnect mock
+      await connectWalletConnect();
     }
     
     onClose();
